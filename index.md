@@ -127,6 +127,7 @@ Pour toute question concernant cette politique de confidentialité ou le traitem
 
 **Application :** Où est la Cathé ?  
 **Développeur :** Cartographed  
+**Adresse mail :** maxime.weil.pro@gmail.com
 **Site :** [cartographed.github.io/ouestlacathe](https://cartographed.github.io/ouestlacathe/)
 
 ---
