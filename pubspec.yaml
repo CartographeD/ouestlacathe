@@ -3,7 +3,7 @@ description: "Une boussole pour retrouver la Cathédrale Notre-Dame de Strasbour
 
 publish_to: 'none'
 
-version: 1.0.0+5
+version: 1.0.0+6
 
 environment:
   sdk: ^3.11.4

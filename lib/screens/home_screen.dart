@@ -90,15 +90,15 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _checkArrival(double distance) {
     // Après un retour depuis l'écran d'arrivée,
-    // on attend d'être à plus de 30 m pour réarmer l'arrivée.
+    // on attend d'être à plus de 100 m pour réarmer l'arrivée.
     if (!_canCheckArrival) {
-      if (distance > 30) {
+      if (distance > 100) {
         _canCheckArrival = true;
       }
       return;
     }
 
-    if (_arrived || distance > 15 || !mounted) {
+    if (_arrived || distance > 80 || !mounted) {
       return;
     }
 
