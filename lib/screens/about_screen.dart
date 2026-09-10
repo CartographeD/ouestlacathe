@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_colors.dart';
 
 class AboutScreen extends StatefulWidget {
@@ -11,8 +11,37 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-
   int _tapCount = 0;
+
+  // 🔗 Lien vers la page Google Play
+  static final Uri _playStoreUri = Uri.parse(
+    'https://play.google.com/store/apps/details?id=com.carto.ouestlacathe',
+  );
+
+  // ⭐ Noter l'application
+  Future<void> _rateApp() async {
+    if (await canLaunchUrl(_playStoreUri)) {
+      await launchUrl(
+        _playStoreUri,
+        mode: LaunchMode.externalApplication,
+      );
+    }
+  }
+
+  // 💬 Donner son avis
+  Future<void> _sendFeedback() async {
+    final emailUri = Uri(
+      scheme: 'mailto',
+      path: 'maxime.weil.pro@gmail.com',
+      queryParameters: {
+        'subject': 'Avis - Où est la Cathé ?',
+      },
+    );
+
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
+    }
+  }
 
   void _versionTapped() {
     _tapCount++;
@@ -51,7 +80,7 @@ class _AboutScreenState extends State<AboutScreen> {
               Text(
                 "Merci d'utiliser\nOù est la Cathé ?",
                 textAlign: TextAlign.center,
-                  style: TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
                 ),
@@ -85,11 +114,12 @@ class _AboutScreenState extends State<AboutScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Retour
                 InkWell(
                   borderRadius: BorderRadius.circular(50),
                   onTap: () => Navigator.pop(context),
                   child: Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: Icon(
                       Icons.arrow_back_ios_new,
                       color: AppColors.icon(context),
@@ -100,6 +130,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
                 const SizedBox(height: 30),
 
+                // Logo
                 Center(
                   child: Hero(
                     tag: "cathedral_logo",
@@ -112,6 +143,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
                 const SizedBox(height: 24),
 
+                // Nom
                 const Center(
                   child: Text(
                     "Cathédrale\nNotre-Dame",
@@ -126,6 +158,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
                 const SizedBox(height: 8),
 
+                // Localisation
                 Center(
                   child: Text(
                     "Strasbourg, France",
@@ -138,6 +171,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
                 const SizedBox(height: 28),
 
+                // Description
                 Center(
                   child: Text(
                     "Pendant plus de deux siècles,\n"
@@ -154,6 +188,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
                 const SizedBox(height: 28),
 
+                // Détails
                 const Text(
                   "Quelques détails",
                   style: TextStyle(
@@ -164,6 +199,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 ),
 
                 const SizedBox(height: 22),
+
                 const _InfoRow(
                   "Hauteur",
                   "142 m",
@@ -196,8 +232,42 @@ class _AboutScreenState extends State<AboutScreen> {
                   "1988",
                 ),
 
+                const SizedBox(height: 36),
+
+                // ⭐ Avis
+                Center(
+                  child: Text(
+                    "Vous aimez l'application ?",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.text(context),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _ActionButton(
+                      icon: Icons.star_rounded,
+                      label: "Noter",
+                      onTap: _rateApp,
+                    ),
+                    const SizedBox(width: 8),
+                    _ActionButton(
+                      icon: Icons.chat_bubble_outline_rounded,
+                      label: "Donner votre avis",
+                      onTap: _sendFeedback,
+                    ),
+                  ],
+                ),
+
                 const SizedBox(height: 32),
 
+                // Signature
                 Center(
                   child: Text(
                     "Développée avec ❤️ à Strasbourg",
@@ -210,6 +280,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
                 const SizedBox(height: 10),
 
+                // Version / Easter egg
                 Center(
                   child: GestureDetector(
                     onTap: _versionTapped,
@@ -231,6 +302,55 @@ class _AboutScreenState extends State<AboutScreen> {
                 const SizedBox(height: 8),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.divider(context).withOpacity(.35),
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 17,
+                color: AppColors.accent,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.text(context),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -261,9 +381,7 @@ class _InfoRow extends StatelessWidget {
               fontSize: 17,
             ),
           ),
-
           const Spacer(),
-
           Text(
             value,
             style: const TextStyle(

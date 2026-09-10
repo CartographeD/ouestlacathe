@@ -3,7 +3,7 @@ description: "Une boussole pour retrouver la Cathédrale Notre-Dame de Strasbour
 
 publish_to: 'none'
 
-version: 1.0.0+6
+version: 1.0.0+7
 
 environment:
   sdk: ^3.11.4
@@ -16,6 +16,7 @@ dependencies:
   geolocator: ^14.0.3
   permission_handler: ^13.0.0
   flutter_svg: ^2.0.10+1
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
