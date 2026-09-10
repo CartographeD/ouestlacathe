@@ -1,30 +1,36 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:ou_est_la_cathe/main.dart';
+import 'package:ou_est_la_cathe/utils/angle.dart';
+import 'package:ou_est_la_cathe/utils/bearing.dart';
+import 'package:ou_est_la_cathe/utils/cathedral.dart';
+import 'package:ou_est_la_cathe/utils/distance.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('Orientation vers la cathédrale', () {
+    test('normalise la rotation par le chemin le plus court', () {
+      expect(normalizeAngle(350, 10), 370);
+      expect(normalizeAngle(10, 350), -10);
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('calcule le relèvement depuis le sud de la cathédrale', () {
+      final bearing = calculateBearing(
+        cathedralLat - 0.01,
+        cathedralLng,
+        cathedralLat,
+        cathedralLng,
+      );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      expect(bearing, closeTo(0, 0.1));
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    test('retourne une distance nulle aux coordonnées de la cathédrale', () {
+      final distance = distanceToCathedral(
+        cathedralLat,
+        cathedralLng,
+        cathedralLat,
+        cathedralLng,
+      );
+
+      expect(distance, 0);
+    });
   });
 }
